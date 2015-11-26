@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Bing Product Feed Extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to ali.nawaz@cooperativecomputing.com so we can send you a copy immediately.
+ *
+ * @category    Cooperative Computing
+ * @package     CooperativeComputing_BingProductFeed
+ * @author      Ali Nawaz <ali.nawaz@cooperativecomputing.com>
+ * @copyright   Copyright 2015 Cooperative Computing (http://www.cooperativecomputing.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+-->
+<config>
+    <tabs>
+        <cooperativecomputing translate="label" module="bingproductfeed">
+            <label>Cooperative Computing</label>
+            <sort_order>1</sort_order>
+        </cooperativecomputing>
+    </tabs>
+   <sections>
+        <bingproductfeed_options translate="label">
+            <label>Bing Product Feed</label>
+            <tab>cooperativecomputing</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>1</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <general translate="label">
+                    <label>Feed Options</label>
+                    <frontend_type>text</frontend_type>
+                    <expanded>1</expanded>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <category_id translate="label">
+                            <label>Specific Categories</label>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>CooperativeComputing_BingProductFeed_Model_Source</source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <comment><![CDATA[
+                                <style>
+                                    #bingproductfeed_options_general_category_id {
+                                        width: 680px;
+                                    }
+                                    #row_bingproductfeed_options_general_category_id p.note {
+                                        width: 668px;
+                                    }
+                                </style>
+                                Select "All Category Products" option to include all products in feed file.<br><br>
+                                <script>
+                                    var baseUrl = '';
+                                    var url = window.location.href;
+                                    var url_parts = url.split('index.php');
+                                    if (url_parts[0] != url) {
+                                        baseUrl = url_parts[0];
+                                    } else {
+                                        baseUrl = window.location.origin + '/';
+                                    }
+
+                                    function generateBingProductFeed() {
+                                        document.getElementById('bing_product_feed_result').innerHTML = '';
+                                        var categories = document.getElementById('bingproductfeed_options_general_category_id');
+                                        var str = "";
+
+                                        for (i=0; i<categories.options.length; i++) {
+                                            if (categories.options[i].selected) {
+                                                str = str + "categories[]=" + categories.options[i].value + "&";
+                                            }
+                                        }
+                                        var oOptions = {
+                                            method: "get",
+                                            parameters: str,
+                                            onSuccess: function (oXHR, oJson) {
+                                                //alert("Response received successfully.");
+                                                var response = oXHR.responseText;
+                                                if (response == 'success') {
+                                                    var result = 'Bing Product Feed file has been generated.<br><a href="' + baseUrl + 'bingshopping.txt" target="_blank">View</a>';
+                                                } else {
+                                                    var result = '<span style="font-weight:bold; color:red;">Some error occurred!</span>';
+                                                }
+                                                document.getElementById('bing_product_feed_result').innerHTML = result;
+                                            },
+                                            onFailure: function (oXHR, oJson) {
+                                                //alert("Request was unsuccessful.");
+                                                var result = '<span style="font-weight:bold; color:red;">Some error occurred!</span>';
+                                                document.getElementById('bing_product_feed_result').innerHTML = result;
+                                            }
+                                        };
+                                        var oRequest = new Ajax.Request(baseUrl+"bing_product_feed.php", oOptions);
+                                    }
+                                </script>
+                                <button style="" onclick="generateBingProductFeed();" class="scalable save" type="button" title="Generate Feed">
+                                    <span>Generate Feed</span>
+                                </button><br><br>
+                                <div id="bing_product_feed_result" style="font-weight:bold;"></div>
+                            ]]></comment>
+                        </category_id>
+                    </fields>
+                </general>
+            </groups>
+        </bingproductfeed_options>
+    </sections>
+</config>
