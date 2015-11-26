@@ -52,13 +52,16 @@ try {
 
     foreach ($prodIds as $productId) {
         $product->load($productId);
+        $productUrl = $product->getProductUrl();
+        $productUrl = str_replace('/' . basename($_SERVER['PHP_SELF']), '/index.php', $productUrl); // include index.php in url
+        // $productUrl = str_replace('/' . basename($_SERVER['PHP_SELF']), '', $productUrl); // do not included index.php in url
 
         $product_data = array();
         $product_data['MerchantProductID'] = $product->getId(); 
         $product_data['Title']             = $product->getName(); 
         $product_data['Brand']             = $product->getResource()->getAttribute('manufacturer')->getFrontend()->getValue($product);
         $product_data['SKU']               = $product->getSku();
-        $product_data['ProductURL']        = $product->getProductUrl();
+        $product_data['ProductURL']        = $productUrl;
 
         if ($product->getSpecialPrice()) {
             $product_data['Price'] = $product->getSpecialPrice();
