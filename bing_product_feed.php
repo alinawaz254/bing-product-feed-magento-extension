@@ -21,7 +21,8 @@
 
 set_time_limit(0);
 require_once 'app/Mage.php';
-Mage::app('default');
+// Mage::app('default');
+Mage::app(Mage::app()->getStore()->getCode());
 
 $categories = isset($_GET['categories']) && count($_GET['categories']) > 0 ? $_GET['categories'] : [];
 $categories = array_filter($categories);
